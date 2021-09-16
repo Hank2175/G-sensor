@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">gsensor</string>
+    <string name="bnt_calibration">calibration</string>
+    <string name="APP_name">G - Sensor</string>
+    <string name="x_axis">X</string>
+    <string name="y_axis">Y</string>
+    <string name="z_axis">Z</string>
+</resources>
