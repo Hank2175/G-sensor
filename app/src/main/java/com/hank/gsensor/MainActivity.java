@@ -22,10 +22,10 @@ import android.graphics.Paint;
 
 
 public class MainActivity extends Activity implements SensorEventListener {
-    Button button_Calibration;
+    Button button_Start, button_Stop;
 
     ImageView iv_canvas;
-    Bitmap bitmap;
+    Bitmap bitmap, Save;
     Canvas canvas;
     Paint paint;
 
@@ -35,7 +35,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     private SensorManager aSensorManager;
     private Sensor aSensor;
     private float gravity[] = new float[3];
-    private float cali_gravity[] = new float[3];
 
     private boolean drawable = false;
     private int _CX = 0, _CY = 0;
@@ -53,14 +52,19 @@ public class MainActivity extends Activity implements SensorEventListener {
         text_x = (TextView)findViewById(R.id.TextView01);
         text_y = (TextView)findViewById(R.id.TextView02);
         text_z = (TextView)findViewById(R.id.TextView03);
-        button_Calibration = findViewById(R.id.calibration);
-
-        for(int i = 0; i < 3;i++)
-            cali_gravity[i] = 0;
+        button_Start = findViewById(R.id.bnt_start);
+        button_Stop = findViewById(R.id.bnt_stop);
+        button_Stop.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast toast = Toast.makeText( MainActivity.this, "Stop and Save", Toast.LENGTH_SHORT);
+                toast.show();
+                StopBNT();
+            }});
 
         aSensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
         aSensor = aSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        aSensorManager.registerListener(this, aSensor, aSensorManager.SENSOR_DELAY_NORMAL);
+        aSensorManager.registerListener(this, aSensor, aSensorManager.SENSOR_DELAY_FASTEST);
     }
 
     @Override
@@ -71,7 +75,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
 // TODO Auto-generated method stub
-        button_Calibration.setOnClickListener(new View.OnClickListener() {
+        button_Start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 drawable = true;
@@ -83,33 +87,25 @@ public class MainActivity extends Activity implements SensorEventListener {
                 canvas = new Canvas(bitmap);
 
                 _CX = iv_canvas.getWidth()/2;
-                _CY = iv_canvas.getHeight()*2/3;
+                _CY = iv_canvas.getHeight()/2;
                 canvas.drawCircle(_CX, _CY, iv_canvas.getWidth()/3, paint);
                 canvas.drawCircle(_CX, _CY, iv_canvas.getWidth()/6, paint);
-                canvas.drawLine(_CX, iv_canvas.getHeight()/3, _CX , iv_canvas.getHeight(), paint);
+                canvas.drawLine(_CX, iv_canvas.getWidth()/6 - 15, _CX , iv_canvas.getWidth(), paint);
                 canvas.drawLine(iv_canvas.getWidth()/6 - 15, _CY, iv_canvas.getWidth()*5/6 + 15, _CY, paint);
                 iv_canvas.setImageBitmap(bitmap);
                 canvas = null;
                 paint.setColor(Color.RED);
-
                 Toast toast = Toast.makeText( MainActivity.this, "calibration", Toast.LENGTH_SHORT);
                 toast.show();
-//                cali_gravity[0] = event.values[0];
-//                cali_gravity[1] = event.values[1];
-//                cali_gravity[2] = event.values[2];
             }
         });
         if(drawable){
-            final double alpha = 0.8;
-            gravity[0] = (float)(alpha * gravity[0] + (1 - alpha) * event.values[0]);
-            gravity[1] = (float)(alpha * gravity[1] + (1 - alpha) * event.values[1]);
-            gravity[2] = (float)(alpha * gravity[2] + (1 - alpha) * event.values[2]);
-            gravity[0] = event.values[0] - cali_gravity[0];
-            gravity[1] = event.values[1] - cali_gravity[1];
-            gravity[2] = event.values[2] - cali_gravity[2];
-            text_x.setText("X = "+gravity[0]);
-            text_y.setText("Y = "+gravity[1]);
-            text_z.setText("Z = "+gravity[2]);
+            gravity[0] = event.values[0];
+            gravity[1] = event.values[1];
+            gravity[2] = event.values[2];
+            text_x.setText("X = " + gravity[0]);
+            text_y.setText("Y = " + gravity[1]);
+            text_z.setText("Z = " + gravity[2]);
 
             bitmap = bitmap.copy(bitmap.getConfig(), true);
             canvas = new Canvas(bitmap);
@@ -123,10 +119,30 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     protected void onPause()
     {
-// TODO Auto-generated method stub
-        /* 取消註冊SensorEventListener */
         aSensorManager.unregisterListener(this);
         Toast.makeText(this, "Unregister accelerometerListener", Toast.LENGTH_LONG).show();
         super.onPause();
+    }
+    private void StopBNT(){
+        drawable = false;
+        paint = new Paint();
+        paint.setStrokeWidth(5);
+        paint.setColor(Color.GREEN);
+        paint.setStyle(Paint.Style.STROKE);
+        bitmap=Bitmap.createBitmap(iv_canvas.getWidth(), iv_canvas.getHeight(), Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
+
+        _CX = iv_canvas.getWidth()/2;
+        _CY = iv_canvas.getHeight()/2;
+        canvas.drawCircle(_CX, _CY, iv_canvas.getWidth()/3, paint);
+        canvas.drawCircle(_CX, _CY, iv_canvas.getWidth()/6, paint);
+        canvas.drawLine(_CX, iv_canvas.getWidth()/6 - 15, _CX , iv_canvas.getWidth(), paint);
+        canvas.drawLine(iv_canvas.getWidth()/6 - 15, _CY, iv_canvas.getWidth()*5/6 + 15, _CY, paint);
+        iv_canvas.setImageBitmap(bitmap);
+        canvas = null;
+
+        text_x.setText("X");
+        text_y.setText("Y");
+        text_z.setText("Z");
     }
 }

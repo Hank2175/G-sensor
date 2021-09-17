@@ -53,35 +53,62 @@
         android:textColor="@color/white"
         android:textSize="25sp" />
 
-    <ImageView
-        android:id="@+id/iv_canvas"
-        android:layout_width="fill_parent"
-        android:layout_height="450dp"
-        android:layout_marginLeft="15sp"
-        android:layout_marginTop="15sp"
-        android:layout_marginRight="15sp"
-        android:layout_marginBottom="1sp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginBottom="5sp"
         android:gravity="bottom"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="11">
 
-        <Button
-            android:id="@+id/calibration"
+
+        <ImageView
+            android:id="@+id/iv_canvas"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:layout_marginLeft="15sp"
             android:layout_marginTop="15sp"
             android:layout_marginRight="15sp"
-            android:layout_marginBottom="15sp"
-            android:onClick="onclick"
-            android:text="@string/bnt_calibration"
-            android:textSize="25sp"
-            android:textStyle="italic" />
+            android:layout_marginBottom="1sp"
+            android:gravity="top"
+            android:layout_height="0dp"
+            android:layout_weight="10"/>
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/bnt_start"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15sp"
+                android:layout_marginTop="5sp"
+                android:layout_marginEnd="5sp"
+                android:layout_marginBottom="5sp"
+                android:onClick="onclick"
+                android:text="@string/bnt_start"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                android:textStyle="italic" />
+            <Button
+                android:id="@+id/bnt_stop"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5sp"
+                android:layout_marginTop="5sp"
+                android:layout_marginEnd="15sp"
+                android:layout_marginBottom="5sp"
+                android:onClick="onclickStop"
+                android:text="@string/bnt_stop"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                android:textStyle="italic" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
